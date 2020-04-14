@@ -1,0 +1,27 @@
+{
+"variables": {
+    "ami_id": "ami-08bc77a2c7eb2b1da",
+    "aws_region": "us-east-1", 
+    "ssh_username": "ubuntu",
+    "aws_vpc_id": "vpc-62fbc018" 
+},
+"builders": [{
+   "type": "amazon-ebs",
+   "region": "{{user `aws_region`}}",
+   "source_ami": "{{user `ami_id`}}",
+   "instance_type": "t2.micro",
+   "ssh_username": "ubuntu",
+   "ami_name": "test_ami",
+   "ssh_keypair_name": "ami-stoodi",
+   "ssh_private_key_file": "ami-stoodi.pem",
+   "vpc_id": "{{user `aws_vpc_id`}}"
+  }],
+"provisioners": [{
+     "type": "ansible",
+     "playbook_file": "provisioners/ansible/ansible-playbook.yml",
+     "ansible_env_vars": [
+       "ANSIBLE_HOST_KEY_CHECKING=False"
+    ]
+}] 
+}
+

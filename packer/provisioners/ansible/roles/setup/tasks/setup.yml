@@ -1,0 +1,19 @@
+---
+- name: add o repo do python 3.6
+  apt_repository:
+    repo: ppa:deadsnakes/ppa
+    state: present
+
+- name: instalando o python 3.6
+  apt:
+    name: python3.6
+    update_cache: yes
+
+- name: instalando python3-pip nginx python3.6-gdbm
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - python3-pip
+    - nginx
+    - python3.6-gdbm      

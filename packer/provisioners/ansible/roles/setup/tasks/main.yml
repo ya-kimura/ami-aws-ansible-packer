@@ -1,0 +1,3 @@
+---
+# tasks file for setup
+- include: setup.yml

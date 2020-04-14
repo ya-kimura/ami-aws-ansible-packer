@@ -1,0 +1,33 @@
+---
+- name: startando o nginx no boot
+  service: 
+    name: nginx
+    enabled: yes
+    state: started 
+
+- name: removendo nginx default.conf
+  command: rm -rf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+  
+- name: add configuração nginx
+  shell:
+    chdir: /etc/nginx/sites-available/
+    creates: default
+    cmd: | 
+      sudo bash -c 'cat > default <<EOF
+      server {
+      listen 80;
+          location / {
+             proxy_pass http://127.0.0.1:8000/;
+             proxy_set_header Host \$host;
+             proxy_set_header X-Forwarded-Proto \$scheme;
+             proxy_set_header X-Real-IP \$remote_addr;
+             proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for; 
+          }  
+      }
+      EOF'
+      
+- name: crianod link simbólico
+  command: ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
+  
+- name: recarregar o nginx
+  command: systemctl restart nginx
